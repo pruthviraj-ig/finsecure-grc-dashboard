@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinSecure GRC Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+  <div class="bg-stars"></div>
+
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">FinSecure Ltd</p>
+      <h1>GRC Risk & Compliance Dashboard</h1>
+      <p class="subtitle">Interactive monitoring of risks, controls, and compliance posture</p>
+    </div>
+
+    <button id="themeToggle" class="theme-toggle">☀️ Light Mode</button>
+  </header>
+
+  <main class="dashboard-shell">
+
+    <section class="section">
+      <div class="section-title-row">
+        <h2>Executive Overview</h2>
+      </div>
+
+      <div class="cards">
+        <div class="card stat-card">
+          <span class="card-label">Total Risks</span>
+          <span class="card-value" id="totalRisks">0</span>
+        </div>
+        <div class="card stat-card">
+          <span class="card-label">High Risks</span>
+          <span class="card-value" id="highRisks">0</span>
+        </div>
+        <div class="card stat-card">
+          <span class="card-label">Medium Risks</span>
+          <span class="card-value" id="mediumRisks">0</span>
+        </div>
+        <div class="card stat-card">
+          <span class="card-label">Open Risks</span>
+          <span class="card-value" id="openRisks">0</span>
+        </div>
+        <div class="card stat-card">
+          <span class="card-label">Controls</span>
+          <span class="card-value" id="totalControls">0</span>
+        </div>
+        <div class="card stat-card">
+          <span class="card-label">Frameworks</span>
+          <span class="card-value" id="totalFrameworks">0</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title-row">
+        <h2>Analytics & Visual Monitoring</h2>
+      </div>
+
+      <div class="analytics-grid">
+        <div class="card chart-card wide">
+          <div class="panel-header">
+            <h3>Risk Level Distribution</h3>
+            <span class="panel-tag">Bar View</span>
+          </div>
+          <div class="chart-box medium-chart">
+            <canvas id="riskLevelChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card chart-card">
+          <div class="panel-header">
+            <h3>Open vs Closed Risks</h3>
+            <span class="panel-tag">Status View</span>
+          </div>
+          <div class="chart-box donut-chart">
+            <canvas id="riskStatusChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card chart-card">
+          <div class="panel-header">
+            <h3>Control Effectiveness</h3>
+            <span class="panel-tag">Controls</span>
+          </div>
+          <div class="chart-box donut-chart">
+            <canvas id="controlEffectivenessChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card chart-card wide">
+          <div class="panel-header">
+            <h3>Residual Risk Overview</h3>
+            <span class="panel-tag">Residual View</span>
+          </div>
+          <div class="chart-box medium-chart">
+            <canvas id="residualRiskChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card chart-card wide">
+          <div class="panel-header">
+            <h3>Risks by Asset Category</h3>
+            <span class="panel-tag">Asset View</span>
+          </div>
+          <div class="chart-box medium-chart">
+            <canvas id="assetRiskChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card chart-card">
+          <div class="panel-header">
+            <h3>Control Status Summary</h3>
+            <span class="panel-tag">Status Mix</span>
+          </div>
+          <div class="chart-box donut-chart">
+            <canvas id="controlsStatusChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="visual-grid">
+
+        <div class="card heatmap-card">
+          <div class="panel-header">
+            <h3>Risk Heatmap</h3>
+            <span class="panel-tag">5x5 Matrix</span>
+          </div>
+
+          <div class="heatmap-wrapper">
+            <div class="heatmap-axis-label y-label">Impact</div>
+
+            <div class="heatmap-content">
+              <div class="heatmap-y-labels">
+                <span>Catastrophic</span>
+                <span>Major</span>
+                <span>Moderate</span>
+                <span>Minor</span>
+                <span>Insignificant</span>
+              </div>
+
+              <div class="heatmap-grid" id="heatmapGrid"></div>
+            </div>
+
+            <div class="heatmap-x-row">
+              <div class="heatmap-x-title">Likelihood</div>
+              <div class="heatmap-x-labels">
+                <span>Rare</span>
+                <span>Unlikely</span>
+                <span>Possible</span>
+                <span>Likely</span>
+                <span>Certain</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card flow-card">
+          <div class="panel-header">
+            <h3>Assets → Risks → Controls Flow</h3>
+            <span class="panel-tag">Relationship View</span>
+          </div>
+
+          <div class="flow-panel">
+            <svg id="flowSvg" class="flow-svg"></svg>
+
+            <div class="flow-column">
+              <div class="flow-column-title">Assets</div>
+              <div id="assetNodes" class="flow-nodes"></div>
+            </div>
+
+            <div class="flow-column">
+              <div class="flow-column-title">Risks</div>
+              <div id="riskNodes" class="flow-nodes"></div>
+            </div>
+
+            <div class="flow-column">
+              <div class="flow-column-title">Controls</div>
+              <div id="controlNodes" class="flow-nodes"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title-row">
+        <h2>Risk Register</h2>
+
+        <div class="filters">
+          <button class="filter-btn active" data-filter="All">All</button>
+          <button class="filter-btn" data-filter="High">High</button>
+          <button class="filter-btn" data-filter="Medium">Medium</button>
+          <button class="filter-btn" data-filter="Open">Open</button>
+          <button class="filter-btn" data-filter="Closed">Closed</button>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Risk</th>
+              <th>Asset</th>
+              <th>Likelihood</th>
+              <th>Impact</th>
+              <th>Score</th>
+              <th>Level</th>
+              <th>Status</th>
+              <th>Owner</th>
+              <th>Residual Risk</th>
+            </tr>
+          </thead>
+          <tbody id="riskTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title-row">
+        <h2>Control Tracking</h2>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Control ID</th>
+              <th>Control Name</th>
+              <th>Linked Risk</th>
+              <th>Type</th>
+              <th>Effectiveness</th>
+              <th>Gap</th>
+              <th>Recommended Action</th>
+            </tr>
+          </thead>
+          <tbody id="controlsTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title-row">
+        <h2>Compliance Alignment</h2>
+      </div>
+
+      <div class="compliance-grid" id="complianceGrid"></div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
