@@ -757,3 +757,16 @@ tr:hover td {
     grid-template-rows: repeat(5, 54px);
   }
 }
+.footer {
+  text-align: center;
+  padding: 30px 10px;
+  margin-top: 50px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.light-mode .footer {
+  color: rgba(0, 0, 0, 0.6);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
